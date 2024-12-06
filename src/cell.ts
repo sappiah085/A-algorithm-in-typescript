@@ -1,4 +1,3 @@
-import P5 from "p5";
 import { dBTP } from "./utility";
 export class Cell {
   _x: number;
@@ -6,7 +5,6 @@ export class Cell {
   _g: number;
   _w: number;
   _b: number;
-  _found: boolean;
   _obstacle: boolean;
   _neighbors: this[];
   _parent: this;
@@ -23,7 +21,6 @@ export class Cell {
     this._neighbors = [];
     this._h = 0;
     this._f = 0;
-    this._found = false;
     this._gc = false;
   }
   calcF(goal: this): number {

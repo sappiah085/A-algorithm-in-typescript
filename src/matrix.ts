@@ -4,11 +4,11 @@ export class Matrix {
   _matrix: Cell[][];
   _r: number;
   _c: number;
-  _openSet: Cell[] = [];
-  _closedSet: Cell[] = [];
-  constructor(r: number, c: number) {
+  _n_obstacles: number;
+  constructor(r: number, c: number, n_obstacles) {
     this._r = r;
     this._c = c;
+    this._n_obstacles = n_obstacles;
     this._matrix = new Array(this._r);
     for (let i = 0; i < r; i++) {
       this._matrix[i] = new Array(c);
@@ -19,7 +19,7 @@ export class Matrix {
     for (let r = 0; r < this._matrix.length; r++) {
       for (let c = 0; c < this._matrix[r].length; c++) {
         let cell = new Cell(c * w, r * h, w, h);
-        if (Math.random() < 0.3) {
+        if (Math.random() < this._n_obstacles) {
           cell._obstacle = true;
         }
         this._matrix[r][c] = cell;

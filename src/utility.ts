@@ -1,5 +1,5 @@
-import P5 from "p5";
 import { Cell } from "./cell";
+import p5 from "p5";
 
 interface Parameters<T> {
   arrayToLoop: T[][];
@@ -18,25 +18,31 @@ export function dBTP(x1: number, y1: number, x2: number, y2: number): number {
 }
 
 export function draw(
-  p5: P5,
+  p5: p5,
   openSet: Cell[],
   closedSet: Cell[],
   T: Cell
 ): void {
   p5.noStroke();
-  let color = "white";
-  if (T._found) {
-    // Blue for the path
-    color = "blue";
-  } else if (openSet.some((cell) => cell._x === T._x && cell._y === T._y)) {
-    color = "green"; // Green for openSet
-  } else if (closedSet.some((cell) => cell._x === T._x && cell._y === T._y)) {
-    // color = "red"; // Red for closedSet
-  } else if (T._obstacle) {
+  let color;
+  let os = openSet.some((cell) => cell._x === T._x && T._y === cell._y);
+  if (T._gc) {
     color = "red";
-  } else if (T._gc) {
-    color = "purple";
+  } else if (os) {
+    color = "gray";
+  } else if (T._obstacle) {
+    color = "yellow";
   }
-  p5.fill(color);
-  p5.circle(T._x + 3, T._y + 3, T._w / 1.5);
+  T._gc || T._obstacle || os ? p5.fill(color) : p5.noFill();
+  p5.circle(T._x + T._w / 2, T._y + T._b / 2, T._w);
+}
+
+export function drawPath(vectorArray: p5.Vector[], p5: p5): void {
+  p5.stroke("blue");
+  p5.strokeWeight(10);
+  p5.noFill();
+  p5.push();
+  p5.beginShape();
+  vectorArray.forEach((vector) => p5.vertex(vector.x, vector.y));
+  p5.endShape();
 }

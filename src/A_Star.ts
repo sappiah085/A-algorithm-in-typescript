@@ -1,5 +1,6 @@
+import p5 from "p5";
 import { Cell } from "./cell";
-import { dBTP } from "./utility";
+import { dBTP, drawPath } from "./utility";
 
 export class AStar {
   _openSet: Cell[];
@@ -13,7 +14,7 @@ export class AStar {
     this._closedSet = [];
     this._openSet.push(this._start);
   }
-  Search(): boolean {
+  Search(p5: p5): boolean {
     let f = Infinity,
       q = 0;
     let continueNeighbor = true;
@@ -21,7 +22,7 @@ export class AStar {
       this._openSet.length === 0 ||
       this._start._neighbors.every((n) => n._obstacle)
     ) {
-      console.log("not found");
+      alert("Path is blocked");
       return false;
     }
     this._openSet.forEach((cell, i) => {
@@ -67,19 +68,22 @@ export class AStar {
       });
       if (removeItem._x === this._goal._x && removeItem._y === this._goal._y) {
         console.log("Found");
-        this.tracePath(removeItem);
+        this.tracePath(removeItem, p5);
         return false;
       }
     }
     return true;
   }
-
-  tracePath(p: Cell): void {
-    p._found = true;
+  tracePath(p: Cell, p5: p5): void {
+    let vectors: p5.Vector[] = [];
+    vectors.push(p5.createVector(p._x + p._w / 2, p._y + p._b / 2));
     let loop = p._parent;
     while (loop) {
-      loop._found = true;
+      vectors.push(
+        p5.createVector(loop._x + loop._w / 2, loop._y + loop._b / 2)
+      );
       loop = loop._parent;
     }
+    drawPath(vectors, p5);
   }
 }
